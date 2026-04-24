@@ -1,0 +1,129 @@
+{% block content %}
+<style>
+    body {
+        background: #f4f6f9;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .job-container {
+        max-width: 750px;
+        margin: 60px auto;
+        padding: 20px;
+    }
+
+    .job-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 35px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+    }
+
+    .job-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    }
+
+    .job-title {
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #2c3e50;
+    }
+
+    .company-name {
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 8px;
+    }
+
+    .posted-date {
+        display: inline-block;
+        background: #e9f2ff;
+        color: #007bff;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+
+    .job-description {
+        font-size: 15px;
+        line-height: 1.7;
+        color: #444;
+        margin-bottom: 30px;
+        white-space: pre-line;
+    }
+
+    .btn-back {
+        display: inline-block;
+        padding: 10px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        background: #6c757d;
+        color: #fff;
+        transition: 0.3s ease;
+    }
+
+    .btn-back:hover {
+        background: #5a6268;
+    }
+
+    .not-found {
+        text-align: center;
+        padding: 40px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+</style>
+
+<div class="job-container">
+    {% if job %}
+    <div class="job-card">
+        <h2 class="job-title">{{ job.title }}</h2>
+
+        <div class="company-name">
+            Company: <strong>{{ job.company_name }}</strong>
+        </div>
+
+        <div class="posted-date">
+            Posted on {{ job.created_at|date:"M d, Y" }}
+        </div>
+        
+        <div class="job-description">
+            {{ job.description }}
+        </div>
+
+        <div style="margin-bottom: 12px;">
+            <strong>Status:</strong> {{ job.status|default:"Open" }}
+        </div>
+        <div style="margin-bottom: 12px;">
+            <strong>Location:</strong> {{ job.location|default:"Not specified" }}
+        </div>
+        <div style="margin-bottom: 12px;">
+            <strong>Type:</strong> {{ job.type|default:"Not specified" }}
+        </div>
+        <div style="margin-bottom: 12px;">
+            <strong>Salary:</strong> {{ job.salary|default:"Not specified" }}
+        </div>
+
+        
+
+
+
+        <a href="{% url 'employer_dashboard' %}" class="btn-back">
+            ← Back to Dashboard
+        </a>
+    </div>
+    {% else %}
+    <div class="not-found">
+        <h3>Job not found</h3>
+        <p>The requested job posting does not exist.</p>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

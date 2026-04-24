@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Job Finder | Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font Awesome for subtle icons (optional but adds polish) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f0f5fa;  /* soft background */
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        /* main card – split into two subtle sections (brand side + form side) */
+        .login-frame {
+            max-width: 1000px;
+            width: 100%;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        /* left panel – AI / brand storytelling */
+        .brand-panel {
+            flex: 1 1 45%;
+            background: linear-gradient(145deg, #0B1E33 0%, #1A3B5E 100%);
+            color: white;
+            padding: 2.8rem 2.2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            isolation: isolate;
+        }
+
+        .brand-panel::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .brand-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(2px);
+            padding: 0.4rem 1rem 0.4rem 0.8rem;
+            border-radius: 40px;
+            width: fit-content;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            border: 1px solid rgba(255,255,255,0.2);
+            margin-bottom: 2.2rem;
+        }
+
+        .ai-badge i {
+            font-size: 1rem;
+            color: #7ad0ff;
+        }
+
+        .brand-panel h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.2rem;
+        }
+
+        .brand-panel h2 span {
+            background: linear-gradient(120deg, #f6d5f7, #a6e1ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand-features {
+            margin: 2rem 0 0 0;
+            list-style: none;
+        }
+
+        .brand-features li {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            font-weight: 400;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .brand-features li i {
+            color: #59d9ff;
+            font-size: 1.2rem;
+            width: 1.5rem;
+        }
+
+        .testimonial-mini {
+            margin-top: 2rem;
+            border-left: 3px solid #59d9ff;
+            padding-left: 1rem;
+            font-style: italic;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* right panel – login form */
+        .form-panel {
+            flex: 1 1 55%;
+            background: #ffffff;
+            padding: 2.8rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-header {
+            margin-bottom: 2rem;
+        }
+
+        .form-header h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0A1C2F;
+            letter-spacing: -0.02em;
+        }
+
+        .form-header p {
+            color: #5b6877;
+            margin-top: 0.3rem;
+            font-size: 0.95rem;
+        }
+
+        /* django style form groups */
+        .input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: #3e4c5a;
+            margin-bottom: 0.4rem;
+        }
+
+        .input-group .icon-input {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group .icon-input i {
+            position: absolute;
+            left: 14px;
+            color: #8b9aab;
+            font-size: 1rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.9rem 1rem 0.9rem 2.8rem;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            background: #ffffff;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .input-group input:focus {
+            border-color: #1A3B5E;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(26,59,94,0.12);
+        }
+
+        .forgot-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: -0.5rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .forgot-link {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #1A3B5E;
+            text-decoration: none;
+            border-bottom: 1px dashed #b9cadb;
+        }
+
+        .forgot-link:hover {
+            color: #0B1E33;
+            border-bottom-style: solid;
+        }
+
+        .login-btn {
+            background: #0F2B42;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 1rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 10px 20px -8px rgba(15,43,66,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+
+        .login-btn i {
+            font-size: 1.1rem;
+        }
+
+        .login-btn:hover {
+            background: #1A3F60;
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            background: #ffeae9;
+            color: #bc1c1e;
+            padding: 0.8rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            margin: 1.2rem 0 0.2rem;
+            text-align: center;
+            border: 1px solid #ffc9c9;
+            font-weight: 500;
+        }
+
+        .register-prompt {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #3f4e5e;
+            border-top: 1px solid #edf2f7;
+            padding-top: 1.8rem;
+        }
+
+        .register-prompt a {
+            color: #0F2B42;
+            font-weight: 700;
+            text-decoration: none;
+            border-bottom: 2px solid #cbdae8;
+        }
+
+        .register-prompt a:hover {
+            border-bottom-color: #0F2B42;
+        }
+
+        /* small responsive */
+        @media (max-width: 700px) {
+            .login-frame {
+                flex-direction: column;
+                border-radius: 1.5rem;
+            }
+            .brand-panel {
+                padding: 2rem 1.8rem;
+            }
+            .brand-panel h2 {
+                font-size: 1.8rem;
+            }
+            .form-panel {
+                padding: 2rem 1.8rem;
+            }
+        }
+
+        /* simulate django template tag style (invisible placeholder) */
+        .csrf-placeholder {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-frame">
+    <!-- LEFT SIDE: AI JOB BRANDING  -->
+    <div class="brand-panel">
+        <div class="brand-content">
+            <div class="ai-badge">
+                <i class="fas fa-robot"></i> <span>AI powered · 10k+ jobs</span>
+            </div>
+            <h2>Unlock your <span>dream career</span> with deep intelligence</h2>
+            <ul class="brand-features">
+                <li><i class="fas fa-bolt"></i> Hyper-personalized job matching</li>
+                <li><i class="fas fa-chart-line"></i> Real-time market insights</li>
+                <li><i class="fas fa-pen-fancy"></i> AI resume & cover letter builder</li>
+                <li><i class="fas fa-shield-alt"></i> Privacy-first job search</li>
+            </ul>
+            <div class="testimonial-mini">
+                “Found my product manager role in 9 days. The AI knew exactly what I was looking for.” <br>— Priya K.
+            </div>
+        </div>
+        <!-- subtle decoration (optional) -->
+        <div style="opacity:0.2; font-size: 0.7rem; margin-top: 1rem; display: flex; gap: 1rem; z-index:2; position: relative;">
+            <span>✨ 90% match accuracy</span> <span>⚡ 2,300+ hires</span>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE: LOGIN FORM (django-ready) -->
+    <div class="form-panel">
+        <div class="form-header">
+            <h3>Welcome back</h3>
+            <p>Sign in to continue your AI job hunt</p>
+        </div>
+
+        <!-- main form –保留了django模板标签 ({% csrf_token %} 和 {{ error }}) -->
+        <form method="post" autocomplete="on">
+            <!-- CSRF will be rendered by django, we keep the tag as is -->
+            {% csrf_token %}
+            <!-- we don't actually render a django form, we keep manual inputs but with names 'username' and 'password' to match typical auth -->
+
+            <div class="input-group">
+                <label for="id_username">Username or email</label>
+                <div class="icon-input">
+                    <i class="far fa-user"></i>
+                    <input type="text" id="id_username" name="username" placeholder="e.g., alex.chen@email.com" autocomplete="username" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="id_password">Password</label>
+                <div class="icon-input">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="id_password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+                </div>
+            </div>
+
+
+            <button type="submit" class="login-btn">
+                <i class="fas fa-arrow-right-to-bracket"></i> Log in
+            </button>
+
+            <!-- Error message rendering exactly like original template -->
+            {% if error %}
+                <p class="error-message">{{ error }}</p>
+            {% endif %}
+        </form>
+
+        <div class="register-prompt">
+            Don't have an account? 
+            <a href="{% url 'register' %}">Create free account</a>
+            <!-- link uses django url tag, kept as is -->
+        </div>
+
+        <!-- additional AI note / trust badge -->
+        <div style="margin-top: 1.2rem; text-align: center; font-size: 0.7rem; color: #a1b3c5;">
+            <i class="fas fa-fingerprint" style="margin-right: 4px;"></i> 
+            AES-256 encrypted · AI ethics certified
+        </div>
+    </div>
+</div>
+
+<!-- note: this is a pure redesign, all django template tags are preserved -->
+</body>
+</html>

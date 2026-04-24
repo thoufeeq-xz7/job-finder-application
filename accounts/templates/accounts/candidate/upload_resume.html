@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Resume - Job Finder</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; color: #333; }
+        .container { max-width: 500px; margin: 50px auto; background: #fff; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); padding: 30px; }
+        h1 { color: #667eea; margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; color: #667eea; margin-bottom: 5px; }
+        input[type="file"] { width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; }
+        .btn { background: #667eea; color: white; padding: 12px 24px; border-radius: 5px; text-decoration: none; font-weight: 600; border: none; cursor: pointer; }
+        .btn:hover { background: #5568d3; }
+        .back-link { display: inline-block; margin-top: 15px; color: #667eea; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Resume</h1>
+        {% if messages %}
+            {% for message in messages %}
+                <div style="color: {% if message.tags == 'success' %}green{% else %}red{% endif %}; margin-bottom: 10px;">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="resume">Select Resume (PDF, DOC, DOCX):</label>
+                <input type="file" name="resume" id="resume" accept=".pdf,.doc,.docx" required>
+            </div>
+            <button type="submit" class="btn">Upload</button>
+        </form>
+        {% if candidate and candidate.resume %}
+            <p style="margin-top: 20px;">Current Resume: <a href="{{ candidate.resume.url }}" target="_blank">View/Download</a></p>
+        {% endif %}
+        <a href="{% url 'candidate_dashboard' %}" class="back-link">&larr; Back to Dashboard</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile - Job Finder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f6f9; color: #333; }
+        .container { max-width: 600px; margin: 40px auto; background: #fff; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); padding: 30px; }
+        h1 { color: #667eea; margin-bottom: 25px; }
+        label { font-weight: 600; color: #667eea; display: block; margin-bottom: 5px; }
+        input, textarea { width: 100%; padding: 10px; margin-bottom: 18px; border-radius: 6px; border: 1px solid #ccc; font-size: 1rem; }
+        .btn { display: inline-block; padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; text-decoration: none; background: #667eea; color: white; margin-top: 10px; }
+        .btn:hover { background: #5568d3; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Edit Profile</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" value="{{ user.username }}" readonly>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="{{ user.email }}" readonly>
+
+        <label for="phone">Phone</label>
+        <input type="text" id="phone" name="phone" value="{{ employer.phone }}">
+
+        <label for="address">Address</label>
+        <input type="text" id="address" name="address" value="{{ employer.address }}">
+        
+        <label for="company_description">Company Description</label>
+        <textarea id="company_description" name="company_description" rows="4">{{ employer.company_description }}</textarea>    
+
+        {% if employer.logo %}
+            <p>Current Logo: <a href="{{ employer.logo.url }}" target="_blank">View Logo</a></p>
+        {% endif %} 
+
+        <button type="submit" class="btn">Save Changes</button>
+        <a href="{% url 'employer_profile' %}" class="btn" style="background:#6c757d;">Cancel</a>
+    </form>
+</div>
+</body>
+</html>
+

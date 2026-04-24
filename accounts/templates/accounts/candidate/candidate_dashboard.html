@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Candidate Dashboard - Job Finder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+            color: #333;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 15px 0;
+            color: white;
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+        }
+
+        .navbar a:hover { opacity: 0.8; }
+
+        /* CONTAINER */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            color: #667eea;
+        }
+
+        /* CARD */
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-item label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
+            color: #667eea;
+        }
+
+        .info-item span {
+            color: #555;
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            margin: 5px 5px 0 0;
+            transition: 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover { background: #5568d3; }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover { background: #5a6268; }
+
+        /* PROGRESS BAR */
+        .progress {
+            background: #e0e0e0;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 12px;
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #667eea;
+            width: {{ profile_completion|default:40 }}%;
+        }
+
+        /* JOB TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table th, table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        table th {
+            background: #f1f1f1;
+        }
+
+        table tr:hover {
+            background: #f9f9f9;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="navbar-container">
+        <div><strong>Job Finder</strong></div>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: #667eea; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px;">
+                {{ user.first_name|first|upper|default:user.username|first|upper }}
+            </div>
+            <a href="{% url 'candidate_profile' %}">{{ user.first_name|default:"Profile ->" }}</a>
+            <a href="{% url 'logout' %}" class="btn btn-secondary" style="margin-left: 15px;">Logout</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- SCHEDULED INTERVIEWS SECTION -->
+    <div class="card">
+        <h2>Scheduled Interviews</h2>
+        {% with scheduled_interviews=applied_jobs|dictsort:"interview_date" %}
+        {% if applied_jobs %}
+            {% for job in applied_jobs %}
+                {% if job.interview_date and job.interview_time %}
+                    <div class="info-item" style="margin-bottom:10px;">
+                        <label>{{ job.job.title }} at {% if job.job.employer %}{{ job.job.employer.company_name }}{% else %}{{ job.job.company_name }}{% endif %}</label>
+                        <span><strong>Date:</strong> {{ job.interview_date }}</span><br>
+                        <span><strong>Time:</strong> {{ job.interview_time }}</span><br>
+                        {% if job.meeting_link %}
+                            <span><strong>Meeting Link:</strong> <a href="{{ job.meeting_link }}" target="_blank">Join Interview</a></span><br>
+                        {% endif %}
+                        <span><strong>Status:</strong> {{ job.status }}</span>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            {% if not applied_jobs|length %}
+                <p style="color:#666;">No interviews scheduled yet.</p>
+            {% endif %}
+        {% else %}
+            <p style="color:#666;">No interviews scheduled yet.</p>
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <h1>Welcome, {{ user.first_name|default:user.username }} 👋</h1>
+
+    <!-- PROFILE INFO -->
+    <div class="card">
+        <h2>Profile Information</h2>
+
+        <div class="info-grid">
+            <div class="info-item">
+                <label>Username</label>
+                <span>{{ user.username }}</span>
+            </div>
+            <div class="info-item">
+                <label>Email</label>
+                <span>{{ user.email }}</span>
+            </div>
+            <div class="info-item">
+                <label>Phone</label>
+                <span>{{ candidate.phone|default:"Not Set" }}</span>
+            </div>
+        </div>
+
+        <p style="margin-top:15px; color:#666;">
+            {{ candidate.bio|default:"No bio added yet." }}
+        </p>
+
+        <!-- Profile Completion -->
+        <p style="margin-top:20px;"><strong>Profile Completion</strong></p>
+        <div class="progress">
+            <div class="progress-bar"></div>
+        </div>
+    </div>
+
+    <!-- RESUME SECTION -->
+    <div class="card">
+        <h2>Resume</h2>
+        {% if candidate.resume %}
+            <p>Your uploaded resume:</p>
+            <a href="{{ candidate.resume.url }}" target="_blank" class="btn btn-primary">View Resume</a>
+        {% else %}
+            <p style="color:#666;">No resume uploaded yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="card">
+        <h2>Actions</h2>
+        <a href="{% url 'add_education' %}" class="btn btn-primary">Add Education</a>
+        <a href="{% url 'upload_resume' %}" class="btn btn-primary">Upload Resume</a>
+        <a href="{% url 'browse_jobs' %}" class="btn btn-secondary">Browse Jobs</a>
+
+    <!-- EDUCATION -->
+    <div class="card">
+        <h2>Education Details</h2>
+
+        {% if education_list %}
+            <div class="info-grid">
+                {% for edu in education_list %}
+                <div class="info-item">
+                    <label>{{ edu.degree }}</label>
+                    <span>{{ edu.institution }}</span><br>
+                    <span>{{ edu.year }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="color:#666;">No education details added yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- APPLIED JOBS -->
+    <div class="card">
+        <h2>Applied Jobs</h2>
+
+        {% if applied_jobs %}
+        <table>
+            <tr>
+                <th>Job Title</th>
+                <th>Company</th>
+                <th>Status</th>
+            </tr>
+            {% for job in applied_jobs %}
+            <tr>
+                <td>
+                  {% if job.job.employer %}
+                    {{ job.job.employer.company_name }}
+                  {% else %}
+                    {{ job.job.company_name }}
+                  {% endif %}
+                </td>
+                <td>{{ job.job.title }}</td>
+                <td>
+                    {% if job.status == 'applied' %}
+                        <span class="badge bg-info">Applied</span>
+                    {% elif job.status == 'under_review' %}
+                        <span class="badge bg-warning">Under Review</span>
+                    {% elif job.status == 'rejected' %}
+                        <span class="badge bg-danger">Rejected</span>
+                    {% elif job.status == 'accepted' %}
+                        <span class="badge bg-success">Accepted</span>
+                    {% elif job.interview_date and job.interview_time %}
+                        <span class="badge bg-primary">Interview Scheduled</span>
+                        <button class="btn btn-secondary" onclick="showInterviewModal('{{ job.id }}')">View</button>
+                    {% else %}
+                        <span class="badge bg-secondary">{{ job.status|capfirst }}</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <script>
+        function showInterviewModal(id) {
+            document.getElementById('interview-modal-' + id).style.display = 'block';
+        }
+        function hideInterviewModal(id) {
+            document.getElementById('interview-modal-' + id).style.display = 'none';
+        }
+        </script>
+        {% else %}
+            <p style="color:#666;">You have not applied to any jobs yet.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+</body>
+</html>

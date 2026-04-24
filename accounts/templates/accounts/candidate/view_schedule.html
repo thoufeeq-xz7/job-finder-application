@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Interview Schedule - Job Finder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f4f6f9; font-family: 'Segoe UI', sans-serif; }
+        .card { border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); margin: 40px auto; max-width: 500px; }
+        .card-title { color: #667eea; }
+        .btn-primary { background: #667eea; border: none; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card p-4">
+        <h2 class="card-title mb-3">Interview Details</h2>
+        <p><strong>Job:</strong> {{ application.job.title }}</p>
+        <p><strong>Company:</strong> {{ employer_name }}</p>
+        <p><strong>Date:</strong> {{ application.interview_date|date:"M d, Y" }}</p>
+        <p><strong>Time:</strong> {{ application.interview_time|time:"H:i" }}</p>
+        {% if application.meeting_link %}
+            <p><strong>Meeting Link:</strong> <a href="{{ application.meeting_link }}" target="_blank">Join Interview</a></p>
+        {% else %}
+            <p><em>No meeting link provided yet.</em></p>
+        {% endif %}
+        <a href="{% url 'browse_jobs' %}" class="btn btn-primary mt-3">Back to browse jobs</a>
+    </div>
+</div>
+</body>
+</html>

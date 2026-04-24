@@ -1,0 +1,153 @@
+{% load dict_access %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Browse Jobs - Job Finder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f4f6f9;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .page-title {
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .job-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            transition: 0.3s ease;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+        }
+
+        .job-badge {
+            font-size: 12px;
+            padding: 6px 10px;
+            border-radius: 20px;
+        }
+
+        .salary-badge {
+            background: #e9f7ef;
+            color: #28a745;
+        }
+
+        .location-badge {
+            background: #eef2ff;
+            color: #4361ee;
+        }
+
+        .apply-btn {
+            border-radius: 8px;
+            padding: 6px 16px;
+        }
+
+        .suggested-box {
+            background: #e6f7ff;
+            border-left: 5px solid #0d6efd;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="page-title">Browse Jobs</h1>
+        <a href="{% url 'candidate_dashboard' %}" class="btn btn-primary">Back to Dashboard</a>
+    </div>
+
+    {% if suggested_jobs %}
+    <div class="suggested-box p-4 mb-4">
+        <h5 class="fw-bold mb-2">AI Suggested Jobs for You</h5>
+        <div style="white-space: pre-line;">{{ suggested_jobs }}</div>
+        <a href="{% url 'candidate_dashboard' %}" class="btn btn-primary mt-3">Back to Dashboard</a>
+    </div>
+    {% endif %}
+
+    <div class="row g-4">
+        {% for job in jobs %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card job-card h-100 p-3">
+
+                <div class="card-body d-flex flex-column">
+
+                    <h5 class="card-title fw-bold">{{ job.title }}</h5>
+                    <p class="text-muted mb-2">{{ job.company_name }}</p>
+
+                    <p class="card-text text-secondary">
+                        {{ job.description|truncatewords:20 }}
+                    </p>
+
+                    <div class="mb-3">
+                        <span class="job-badge location-badge me-2">
+                            📍 {{ job.location }}
+                        </span>
+                        <span class="job-badge bg-light text-dark me-2">
+                            {{ job.type }}
+                        </span>
+                        <span class="job-badge salary-badge">
+                            💰 {{ job.salary }}
+                        </span>
+                    </div>
+
+                    <div class="mt-auto">
+                            {% if job.id in applied_job_ids %}
+                                <span class="badge bg-success w-100 p-2">Applied</span>
+                                {% with interview=applied_job_interviews|dict_get:job.id %}
+                                    {% if interview and interview.interview_date and interview.interview_time %}
+                                        <div class="mt-2">
+                                            <span class="badge bg-primary w-100 p-2">Interview Scheduled</span>
+                                            <div class="mt-1 small">
+                                                <strong>Date:</strong> {{ interview.interview_date }}<br>
+                                                <strong>Time:</strong> {{ interview.interview_time }}<br>
+                                                {% if interview.meeting_link %}
+                                                    <strong>Link:</strong> <a href="{{ interview.meeting_link }}" target="_blank">Join Interview</a><br>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <a href="{% url 'candidate_view_schedule' job.id %}" class="btn btn-secondary apply-btn w-100 mt-2">View Schedule</a>
+                                    {% endif %}
+                                {% endwith %}
+                            {% else %}
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="job_id" value="{{ job.id }}">
+                                    <button type="submit" class="btn btn-primary apply-btn w-100">
+                                        Apply Now
+                                    </button>
+                                </form>
+                            {% endif %}
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <div class="alert alert-warning">
+                No jobs available at the moment.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+</body>
+</html>

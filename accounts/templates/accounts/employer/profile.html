@@ -1,0 +1,100 @@
+{% block content %}
+<style>
+    .container {
+        max-width: 750px;
+        margin: 50px auto;
+        padding: 0 20px;
+    }
+    .profile-card {
+        background: white;
+        border-radius: 12px;
+        padding: 35px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+    h1 {
+        color: #667eea;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+    .profile-info {
+        margin-bottom: 25px;
+    }
+    .info-item {
+        margin-bottom: 18px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    .info-item label {
+        font-weight: 600;
+        color: #667eea;
+        display: block;
+        margin-bottom: 5px;
+    }
+    .info-item span {
+        color: #555;
+    }
+    .btn {
+        display: inline-block;
+        padding: 10px 22px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        text-decoration: none;
+        transition: 0.3s;
+        margin-right: 10px;
+        margin-top: 10px;
+    }
+    .btn-primary {
+        background: #667eea;
+        color: white;
+    }
+    .btn-primary:hover {
+        background: #5568d3;
+    }
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+    .btn-secondary:hover {
+        background: #5a6268;
+    }
+</style>
+<div class="container">
+    <div class="profile-card">
+
+        <div class="avatar">
+            {{ user.username|first|upper }}
+        </div>
+
+        <h1>Candidate Profile</h1>
+
+        <div class="profile-info">
+
+            <div class="info-item">
+                <label>Username</label>
+                <span>{{ user.username }}</span>
+            </div>
+
+            <div class="info-item">
+                <label>Email</label>
+                <span>{{ user.email }}</span>
+            </div>
+            <div class="info-item">
+                <label>Address</label>
+                <span>{{ employer.address|default:"Not Set" }}</span>
+            </div>
+            <div class="info-item">
+                <label>Phone</label>
+                <span>{{ employer.phone|default:"Not Set" }}</span>
+            </div>
+            <div class="info-item">
+                <label>Company Description</label>
+                <span>{{ employer.company_description|default:"No description added yet." }}</span>
+            </div>
+        </div>
+        <a href="{% url 'edit_employer_profile' %}" class="btn btn-primary">Edit Profile</a>
+        <a href="{% url 'employer_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

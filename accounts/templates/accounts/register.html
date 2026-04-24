@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register | Job Finder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #36b9cc, #4e73df);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .register-container {
+            background: #ffffff;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .register-container h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: #4e73df;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(78, 115, 223, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #1cc88a;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #17a673;
+        }
+
+        .error-message {
+            margin-top: 15px;
+            color: #e74a3b;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .login-link {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: #4e73df;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 500px) {
+            .register-container {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="register-container">
+    <h1>Create Account</h1>
+
+    <form method="post" autocomplete="on">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" autocomplete="username" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" autocomplete="new-password" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="user_type">Register as</label>
+            <select id="user_type" name="user_type" required>
+                <option value="candidate">Candidate</option>
+                <option value="employer">Employer</option>
+            </select>
+        </div>
+
+        <button type="submit">Register</button>
+
+        {% if error %}
+            <p class="error-message">{{ error }}</p>
+        {% endif %}
+    </form>
+
+    <div class="login-link">
+        Already have an account?
+        <a href="{% url 'login' %}">Login here</a>
+    </div>
+</div>
+
+</body>
+</html>

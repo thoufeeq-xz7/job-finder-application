@@ -1,0 +1,289 @@
+        <!-- POSTED JOBS TABLE -->
+        <div class="card">
+            <h2>Posted Jobs</h2>
+            {% if posted_jobs %}
+            <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+                <thead>
+                    <tr style="background:#f1f1f1;">
+                        <th style="padding:10px; text-align:left;">Title</th>
+                        <th style="padding:10px; text-align:left;">Status</th>
+                        <th style="padding:10px; text-align:left;">Posted</th>
+                        <th style="padding:10px; text-align:left;">Applications</th>
+                        <th style="padding:10px; text-align:left;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in posted_jobs %}
+                    <tr>
+                        <td style="padding:10px;">{{ job.title }}</td>
+                        <td style="padding:10px;">{{ job.status|default:"Open" }}</td>
+                        <td style="padding:10px;">{{ job.created_at|date:'M d, Y' }}</td>
+                        <td style="padding:10px;">{{ job.application_count|default:0 }}</td>
+                        <td style="padding:10px;">
+                            <a href="#" class="btn btn-secondary" style="padding:6px 14px; font-size:0.95em;">View</a>
+                            <a href="#" class="btn btn-secondary" style="padding:6px 14px; font-size:0.95em;">Edit</a>
+                            <a href="#" class="btn btn-secondary" style="padding:6px 14px; font-size:0.95em; background:#c33;">Close</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+                <p style="color:#666;">No jobs posted yet.</p>
+            {% endif %}
+        </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employer Dashboard - Job Finder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .navbar-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+        .navbar-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+        .navbar-links a:hover {
+            opacity: 0.8;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+        h1 {
+            font-size: 32px;
+            margin-bottom: 30px;
+            color: #667eea;
+        }
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .info-item {
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+        .info-item label {
+            font-weight: 600;
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .info-item value {
+            color: #666;
+        }
+        .btn {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .btn:hover {
+            background: #5568d3;
+        }
+        .btn-secondary {
+            background: #666;
+        }
+        .btn-secondary:hover {
+            background: #555;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+        .alert {
+            background: #e8f4ff;
+            color: #0066cc;
+            border-left-color: #0066cc;
+        }
+        .alert-danger {
+            background: #fee;
+            color: #c33;
+            border-left-color: #c33;
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">Job Finder</div>
+            <ul class="navbar-links">
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">Post Job</a></li>
+                <li><a href="#">View Jobs</a></li>
+                <li><a href="#">Applications</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- ACTIONABLE ALERTS SECTION -->
+        {% if alert_message %}
+        <div class="alert{% if alert_type %} alert-{{ alert_type }}{% endif %}">
+            {{ alert_message }}
+        </div>
+        {% endif %}
+        <!-- PROFILE COMPLETION BAR -->
+        {% if profile_completion is not None %}
+        <div style="margin-bottom: 25px;">
+            <label style="font-weight:600; color:#667eea;">Profile Completion</label>
+            <div style="background:#e0e0e0; border-radius:20px; overflow:hidden; height:14px; width:100%; margin-top:5px;">
+                <div style="height:100%; background:#667eea; width:{{ profile_completion }}%; transition:width 0.5s;"></div>
+            </div>
+            <span style="color:#666; font-size:0.98em;">{{ profile_completion }}% complete</span>
+        </div>
+        {% endif %}
+        <!-- JOB STATS SECTION -->
+                <!-- RECENT ACTIVITY SECTION -->
+                <div class="card">
+                    <h2>Recent Activity</h2>
+                    <div style="display: flex; flex-wrap: wrap; gap: 30px;">
+                        <div style="flex: 1; min-width: 220px;">
+                            <h3 style="color: #667eea; font-size: 1.1rem; margin-bottom: 10px;">Recent Jobs</h3>
+                            {% if recent_jobs %}
+                                <ul style="list-style: disc inside; color: #444;">
+                                {% for job in recent_jobs %}
+                                    <li>{{ job.title }} <span style="color:#aaa; font-size:0.95em;">({{ job.created_at|date:'M d, Y' }})</span></li>
+                                {% endfor %}
+                                </ul>
+                            {% else %}
+                                <span style="color:#888;">No recent jobs posted.</span>
+                            {% endif %}
+                        </div>
+                        <div style="flex: 1; min-width: 220px;">
+                            <h3 style="color: #667eea; font-size: 1.1rem; margin-bottom: 10px;">Latest Applications</h3>
+                            {% if recent_applications %}
+                                <ul style="list-style: disc inside; color: #444;">
+                                {% for app in recent_applications %}
+                                    <li>{{ app.candidate_name }} for <b>{{ app.job_title }}</b> <span style="color:#aaa; font-size:0.95em;">({{ app.applied_at|date:'M d, Y' }})</span></li>
+                                {% endfor %}
+                                </ul>
+                            {% else %}
+                                <span style="color:#888;">No recent applications.</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+        <div class="card" style="display: flex; gap: 30px; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <div style="text-align: center;">
+                <div style="font-size: 2.2rem; font-weight: bold; color: #667eea;">{{ total_jobs|default:0 }}</div>
+                <div style="color: #666;">Jobs Posted</div>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 2.2rem; font-weight: bold; color: #667eea;">{{ total_applications|default:0 }}</div>
+                <div style="color: #666;">Applications</div>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 2.2rem; font-weight: bold; color: #667eea;">{{ pending_jobs|default:0 }}</div>
+                <div style="color: #666;">Pending Approval</div>
+            </div>
+        </div>
+        <h1>Employer Dashboard</h1>
+
+        <div class="card">
+            <h2>Company Information</h2>
+            {% if employer %}
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Company Name</label>
+                        <value>{{ employer.username }}</value>
+                    </div>
+                    <div class="info-item">
+                        <label>Address</label>
+                        <value>{{ employer.address }}</value>
+                    </div>
+                    <div class="info-item">
+                        <label>Phone</label>
+                        <value>{{ employer.phone|default:"Not Set" }}</value>
+                    </div>
+                </div>
+                <p style="margin-top: 20px; color: #666;">{{ employer.company_description|default:"No description added yet" }}</p>
+            {% else %}
+                <p style="color: #666;">No company profile found. Create a profile to get started.</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h2>Actions</h2>
+            {% if employer %}
+                {% if employer.approval_status == 'approved' %}
+                    <button class="btn">Post New Job</button>
+                    <button class="btn btn-secondary">View Posted Jobs</button>
+                    <button class="btn btn-secondary">Edit Company Profile</button>
+                    <button class="btn btn-secondary">View Applications</button>
+                {% else %}
+                    <p style="color: #666; margin-bottom: 15px;">⏳ You can access these features once your account is approved by admin.</p>
+                    <button class="btn" disabled style="opacity: 0.5; cursor: not-allowed;">Post New Job</button>
+                    <button class="btn btn-secondary" disabled style="opacity: 0.5; cursor: not-allowed;">View Posted Jobs</button>
+                    <button class="btn btn-secondary">Edit Company Profile</button>
+                    <button class="btn btn-secondary" disabled style="opacity: 0.5; cursor: not-allowed;">View Applications</button>
+                {% endif %}
+            {% else %}
+                <button class="btn">Create Company Profile</button>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html> write in neatly

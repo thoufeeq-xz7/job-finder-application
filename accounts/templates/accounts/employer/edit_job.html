@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Job Post - Job Finder</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f6fa; color: #333; }
+        .container { max-width: 600px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+        h1 { text-align: center; margin-bottom: 24px; }
+        form { display: flex; flex-direction: column; gap: 16px; }
+        label { font-weight: 500; }
+        input, textarea, select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        button { background: #667eea; color: #fff; border: none; padding: 10px 0; border-radius: 4px; font-size: 1rem; cursor: pointer; }
+        button:hover { background: #5a67d8; }
+        .back-link { display: block; margin-bottom: 16px; color: #667eea; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'employer_dashboard' %}" class="back-link">&larr; Back to Dashboard</a>
+        <h1>Edit Job Post</h1>
+        <form method="post">
+            {% csrf_token %}
+            <label for="title">Job Title</label>
+            <input type="text" id="title" name="title" value="{{ job.title }}" required>
+
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="5" required>{{ job.description }}</textarea>
+
+            <label for="location">Location</label>
+            <input type="text" id="location" name="location" value="{{ job.location }}" required>
+
+            <label for="type">Job Type</label>
+            <select id="type" name="type" required>
+                <option value="Full Time" {% if job.type == 'Full Time' %}selected{% endif %}>Full Time</option>
+                <option value="Part Time" {% if job.type == 'Part Time' %}selected{% endif %}>Part Time</option>
+                <option value="Contract" {% if job.type == 'Contract' %}selected{% endif %}>Contract</option>
+                <option value="Internship" {% if job.type == 'Internship' %}selected{% endif %}>Internship</option>
+            </select>
+
+            <label for="salary">Salary</label>
+            <input type="text" id="salary" name="salary" value="{{ job.salary }}">
+
+            <label for="status">Status</label>
+            <select id="status" name="status" required>
+                <option value="Open" {% if job.status == 'Open' %}selected{% endif %}>Open</option>
+                <option value="Closed" {% if job.status == 'Closed' %}selected{% endif %}>Closed</option>
+            </select>
+
+            <button type="submit">Update Job</button>
+        </form>
+    </div>
+</body>
+</html>
